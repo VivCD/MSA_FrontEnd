@@ -1,4 +1,4 @@
-package com.example.bikechat2
+package com.example.bikechat2.ui.screens
 
 
 import androidx.compose.foundation.layout.*
@@ -14,6 +14,9 @@ import retrofit2.Callback
 import retrofit2.Response
 import kotlinx.coroutines.launch
 import androidx.compose.material3.MaterialTheme
+import com.example.bikechat2.data.api.ApiResponse
+import com.example.bikechat2.data.api.RetrofitInstance
+import com.example.bikechat2.data.model.User
 
 @Composable
 fun SignInScreen(onSignInComplete: () -> Unit) {
