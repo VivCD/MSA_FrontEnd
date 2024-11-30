@@ -1,4 +1,4 @@
-package com.example.bikechat2
+package com.example.bikechat2.ui.screens
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
@@ -20,7 +20,20 @@ fun MainScreen() {
             SignInScreen(onSignInComplete = { navController.navigate("home") })
         }
         composable("home") {
-            HomeScreen()
+            HomeScreen(navController, onRideMode = { /* Ride Mode Action */ }, onCallInit = { /* Call Init Action */ })
+        }
+        composable("friends") {
+            FriendsScreen(
+                navToMap = { navController.navigate("map") },
+                navToProfile = { navController.navigate("profile") }
+            )
+        }
+        composable("map") {
+            MapScreen()
+        }
+        composable("profile") {
+            ProfileScreen()
         }
     }
 }
+
