@@ -1,4 +1,4 @@
-package com.example.bikechat2
+package com.example.bikechat2.data.model
 
 data class User(
     val userID: String? = null,

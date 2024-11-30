@@ -1,5 +1,7 @@
-package com.example.bikechat2
+package com.example.bikechat2.data.api
 
+import com.example.bikechat2.data.model.LoginRequest
+import com.example.bikechat2.data.model.User
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
