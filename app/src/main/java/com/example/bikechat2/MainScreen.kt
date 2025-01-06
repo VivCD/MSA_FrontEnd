@@ -1,9 +1,11 @@
 package com.example.bikechat2
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.bikechat2.ui.screen.HomeScreen
 import com.example.bikechat2.ui.screen.LoginScreen
 import com.example.bikechat2.ui.screen.SignInScreen
@@ -30,13 +32,30 @@ fun MainScreen() {
                 onRideModeClick = { /* Handle Ride Mode */ },
                 onInitializeCallClick = { /* Handle Initialize Call */ },
                 onMusicClick = { /* Handle Music */ },
-                onFriendsClick = { navController.navigate("friends") },
+                onFriendsClick = {
+                    navController.navigate("friends/{username}".replace("{username}", "currentUser"))
+                },
                 onMapClick = { navController.navigate("map") },
-                onProfileClick = { navController.navigate("profile")}
+                onProfileClick = { navController.navigate("profile") }
             )
         }
-        composable("friends") { FriendsScreen() }
-        composable("map") { MapScreen() }
-        composable("profile") { ProfileScreen() }
+        composable(
+            route = "friends/{username}",
+            arguments = listOf(navArgument("username") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val username = backStackEntry.arguments?.getString("username") ?: ""
+            FriendsScreen(
+                onMapClick = { navController.navigate("map") },
+                onProfileClick = { navController.navigate("profile") },
+                username = username
+            )
+        }
+        composable("map") {
+            MapScreen()
+        }
+        composable("profile") {
+            ProfileScreen()
+        }
     }
+
 }

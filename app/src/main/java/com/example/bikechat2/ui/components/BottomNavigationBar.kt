@@ -15,25 +15,26 @@ fun BottomNavigationBar(
 ) {
     BottomNavigation {
         BottomNavigationItem(
-            selected = false, // You can use logic to track selection
+            selected = false, // Update with logic to track selection if needed
             onClick = onFriendsClick,
-            icon = { Text(text = "Friends") },
+            icon = { /* Optionally add an icon here */ },
             label = { Text("Friends") }
         )
         BottomNavigationItem(
             selected = false,
             onClick = onMapClick,
-            icon = { Text(text = "Map") },
+            icon = { /* Optionally add an icon here */ },
             label = { Text("Map") }
         )
         BottomNavigationItem(
             selected = false,
             onClick = onProfileClick,
-            icon = { Text(text = "Profile") },
+            icon = { /* Optionally add an icon here */ },
             label = { Text("Profile") }
         )
     }
 }
+
 
 
 

@@ -61,6 +61,7 @@ dependencies {
     implementation ("androidx.compose.ui:ui-tooling:1.5.0")
     implementation ( "androidx.navigation:navigation-compose:2.7.2")
     implementation(libs.firebase.firestore.ktx)
+    implementation(libs.androidx.activity.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
