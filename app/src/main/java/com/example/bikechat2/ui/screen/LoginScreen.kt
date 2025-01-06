@@ -16,7 +16,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 @Composable
-fun LoginScreen(onLoginSuccess: () -> Unit, onNavigateToSignIn: () -> Unit) {
+fun LoginScreen(onLoginSuccess: (String) -> Unit, onNavigateToSignIn: () -> Unit) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var errorMessage by remember { mutableStateOf<String?>(null) }
@@ -42,7 +42,7 @@ fun LoginScreen(onLoginSuccess: () -> Unit, onNavigateToSignIn: () -> Unit) {
                     RetrofitInstance.api.loginUser(loginRequest).enqueue(object : Callback<ApiResponse> {
                         override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
                             if (response.isSuccessful && response.body()?.success == true) {
-                                onLoginSuccess()
+                                onLoginSuccess(username) // Pass username on success
                             } else {
                                 errorMessage = response.body()?.message ?: "Login failed"
                             }

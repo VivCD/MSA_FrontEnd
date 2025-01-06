@@ -19,7 +19,7 @@ import com.example.bikechat2.data.api.RetrofitInstance
 import com.example.bikechat2.data.model.User
 
 @Composable
-fun SignInScreen(onSignInComplete: () -> Unit) {
+fun SignInScreen(onSignInComplete: (String) -> Unit) {
     var email by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -61,7 +61,7 @@ fun SignInScreen(onSignInComplete: () -> Unit) {
                     RetrofitInstance.api.registerUser(user).enqueue(object : Callback<ApiResponse> {
                         override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
                             if (response.isSuccessful && response.body()?.success == true) {
-                                onSignInComplete()
+                                onSignInComplete(username) // Pass username on success
                             } else {
                                 errorMessage = response.body()?.message ?: "Registration failed"
                             }
