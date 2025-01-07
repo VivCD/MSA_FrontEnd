@@ -62,6 +62,8 @@ dependencies {
     implementation ( "androidx.navigation:navigation-compose:2.7.2")
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.androidx.activity.ktx)
+    implementation ("com.dafruits:webrtc:123.0.0")
+    implementation ("com.squareup.okhttp3:okhttp:4.9.3")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

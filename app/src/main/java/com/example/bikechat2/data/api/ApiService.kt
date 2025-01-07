@@ -45,4 +45,6 @@ interface ApiService {
     fun getFriendRequests(
         @Path("username") username: String
     ): Call<List<String>>
+
 }
+
