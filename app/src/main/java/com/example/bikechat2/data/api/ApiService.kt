@@ -40,6 +40,7 @@ interface ApiService {
         @Query("friendToBeDeleted") friendUsername: String
     ): Call<ApiResponse>
 
+
     @GET("/users/{username}/friendRequests")
     fun getFriendRequests(
         @Path("username") username: String

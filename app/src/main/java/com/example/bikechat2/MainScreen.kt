@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.bikechat2.data.model.MainViewModel
+import com.example.bikechat2.ui.screen.CallScreen
 import com.example.bikechat2.ui.screen.HomeScreen
 import com.example.bikechat2.ui.screen.LoginScreen
 import com.example.bikechat2.ui.screen.SignInScreen
@@ -16,27 +16,18 @@ import com.example.bikechat2.ui.screen.ProfileScreen
 import com.example.bikechat2.ui.screen.GroupSelectScreen
 
 @Composable
-fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+fun MainScreen() {
     val navController = rememberNavController()
-
-    // Observe the current username from ViewModel
-    val currentUser = viewModel.currentUsername
 
     NavHost(navController = navController, startDestination = "login") {
         composable("login") {
             LoginScreen(
-                onLoginSuccess = { username ->
-                    viewModel.setCurrentUsername(username) // Update ViewModel with the logged-in username
-                    navController.navigate("home")
-                },
+                onLoginSuccess = { navController.navigate("home") },
                 onNavigateToSignIn = { navController.navigate("signIn") }
             )
         }
         composable("signIn") {
-            SignInScreen(onSignInComplete = { username ->
-                viewModel.setCurrentUsername(username) // Update ViewModel
-                navController.navigate("home")
-            })
+            SignInScreen(onSignInComplete = { navController.navigate("home") })
         }
         composable("home") {
             HomeScreen(
@@ -46,9 +37,7 @@ fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.v
                 },
                 onMusicClick = { /* Handle Music */ },
                 onFriendsClick = {
-                    if (currentUser.isNotEmpty()) {
-                        navController.navigate("friends/$currentUser")
-                    }
+                    navController.navigate("friends/{username}".replace("{username}", "currentUser"))
                 },
                 onMapClick = { navController.navigate("map") },
                 onProfileClick = { navController.navigate("profile") }
@@ -84,5 +73,7 @@ fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.v
         composable("profile") {
             ProfileScreen()
         }
+        
     }
+
 }
