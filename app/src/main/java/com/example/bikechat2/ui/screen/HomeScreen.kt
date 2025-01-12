@@ -1,6 +1,7 @@
 package com.example.bikechat2.ui.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
@@ -11,8 +12,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material3.*
 import androidx.compose.ui.draw.clip
 import com.example.bikechat2.ui.components.BottomNavigationBar
-
-
 
 @Composable
 fun HomeScreen(
@@ -51,12 +50,13 @@ fun HomeScreen(
             // Spacer for spacing
             Spacer(modifier = Modifier.weight(1f))
 
-            // Initialize a Call Button
+            // Initialize a Call Button (Now Clickable)
             Box(
                 modifier = Modifier
                     .size(150.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primary),
+                    .background(MaterialTheme.colorScheme.primary)
+                    .clickable { onInitializeCallClick() },  // Linked to navigation
                 contentAlignment = Alignment.Center
             ) {
                 Text(

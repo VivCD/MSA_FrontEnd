@@ -13,6 +13,7 @@ import com.example.bikechat2.ui.screen.SignInScreen
 import com.example.bikechat2.ui.screen.FriendsScreen
 import com.example.bikechat2.ui.screen.MapScreen
 import com.example.bikechat2.ui.screen.ProfileScreen
+import com.example.bikechat2.ui.screen.GroupSelectScreen
 
 @Composable
 fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
@@ -40,7 +41,9 @@ fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.v
         composable("home") {
             HomeScreen(
                 onRideModeClick = { /* Handle Ride Mode */ },
-                onInitializeCallClick = { /* Handle Initialize Call */ },
+                onInitializeCallClick = {
+                    navController.navigate("groupSelect")
+                },
                 onMusicClick = { /* Handle Music */ },
                 onFriendsClick = {
                     if (currentUser.isNotEmpty()) {
@@ -51,6 +54,19 @@ fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.v
                 onProfileClick = { navController.navigate("profile") }
             )
         }
+
+        composable("groupSelect") {
+            GroupSelectScreen(
+                username = currentUser,
+                onStartCallClick = { groupName ->
+                    // Handle starting a call here
+                },
+                onFriendsClick = { navController.navigate("friends/$currentUser") },
+                onMapClick = { navController.navigate("map") },
+                onProfileClick = { navController.navigate("profile") }
+            )
+        }
+
         composable(
             route = "friends/{username}",
             arguments = listOf(navArgument("username") { type = NavType.StringType })

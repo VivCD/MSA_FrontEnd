@@ -40,9 +40,16 @@ interface ApiService {
         @Query("friendToBeDeleted") friendUsername: String
     ): Call<ApiResponse>
 
-
     @GET("/users/{username}/friendRequests")
     fun getFriendRequests(
         @Path("username") username: String
     ): Call<List<String>>
+
+    // New API endpoint to fetch groups
+    @GET("/groups/getByName")
+    fun getGroups(@Query("groupName") groupName: String): Call<List<String>>
+
+    @GET("/groups/getUserGroups")
+    fun getUserGroups(@Query("username") username: String): Call<List<String>>
+
 }
