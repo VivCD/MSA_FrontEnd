@@ -53,4 +53,13 @@ interface ApiService {
     @GET("/groups/getUserGroups")
     fun getUserGroups(@Query("username") username: String): Call<List<String>>
 
+    @GET("/map/getData")
+    fun getMapData(@Query("username") username: String): Call<List<String>>
+
+    @POST("/map/updateCoordinates")
+    fun updateMapCoordinates(
+        @Query("username") username: String,
+        @Query("latitude") latitude: Double,
+        @Query("longitude") longitude: Double
+    ): Call<ApiResponse>
 }

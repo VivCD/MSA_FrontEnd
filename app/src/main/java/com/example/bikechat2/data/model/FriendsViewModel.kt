@@ -5,8 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.bikechat2.data.api.ApiResponse
 import com.example.bikechat2.data.api.RetrofitInstance
-import com.example.bikechat2.data.model.FriendRequest
-import com.example.bikechat2.data.model.User
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

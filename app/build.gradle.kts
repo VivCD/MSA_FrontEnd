@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.map.secret)
 }
 
 android {
@@ -62,8 +63,12 @@ dependencies {
     implementation ( "androidx.navigation:navigation-compose:2.7.2")
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.androidx.activity.ktx)
+    implementation(libs.google.maps)
     implementation ("com.dafruits:webrtc:123.0.0")
     implementation ("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation ("com.google.maps.android:maps-compose:2.11.1")
+    implementation ("com.google.android.gms:play-services-maps:18.1.0")
+    implementation ("com.google.android.gms:play-services-location:18.0.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
