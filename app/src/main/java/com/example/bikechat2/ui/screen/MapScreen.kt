@@ -29,22 +29,18 @@ fun MapScreen(
     val currentPosition by viewModel.currentPosition
     val context = LocalContext.current
 
-    // Fetch the user's location once the screen is launched
     LaunchedEffect(Unit) {
         viewModel.fetchUserLocation(context, username)
     }
 
-    // Google map camera position state
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(LatLng(0.0, 0.0), 10f)
     }
 
-    // Parse the currentPosition to extract latitude and longitude
     val latLng = parseLocation(currentPosition)
 
-    // If the currentPosition is valid, update the camera position
     latLng?.let {
-        cameraPositionState.position = CameraPosition.fromLatLngZoom(it, 15f) // Adjust zoom level here
+        cameraPositionState.position = CameraPosition.fromLatLngZoom(it, 15f)
     }
 
     Scaffold(
