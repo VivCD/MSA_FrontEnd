@@ -50,7 +50,7 @@ fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.v
                         navController.navigate("friends/$currentUser")
                     }
                 },
-                onMapClick = { navController.navigate("map") },
+                onMapClick = { navController.navigate("map/$currentUser") },
                 onProfileClick = { navController.navigate("profile") }
             )
         }
@@ -78,8 +78,16 @@ fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.v
                 username = username
             )
         }
-        composable("map") {
-            MapScreen()
+        composable(
+            route = "map/{username}",
+            arguments = listOf(navArgument("username") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val username = backStackEntry.arguments?.getString("username") ?: ""
+            MapScreen(
+                username = username,
+                onFriendsClick = { navController.navigate("friends/$username") },
+                onProfileClick = { navController.navigate("profile") }
+            )
         }
         composable("profile") {
             ProfileScreen()
