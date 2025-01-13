@@ -18,6 +18,8 @@ import retrofit2.Response
 import androidx.compose.runtime.State
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class MapViewModel(application: Application) : AndroidViewModel(application) {
     private val _mapData = mutableStateOf<List<String>>(emptyList())
@@ -29,18 +31,8 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(application)
 
 
-//    fun fetchUserLocation(username: String) {
-//        // Request the last known location
-//        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-//            if (location != null) {
-//                val userLocation = "Lat: ${location.latitude}, Long: ${location.longitude}"
-//                _currentPosition.value = userLocation
-//
-//                // Send the location to your backend
-//                updateMapCoordinates(username, location.latitude, location.longitude)
-//            }
-//        }
-//    }
+
+
 
     fun fetchUserLocation(context: Context, username: String) {
         if (ContextCompat.checkSelfPermission(
@@ -63,7 +55,8 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
                     val userLocation = "Lat: ${location.latitude}, Long: ${location.longitude}"
                     _currentPosition.value = userLocation
 
-                    updateMapCoordinates(username, location.latitude, location.longitude)
+                    val currentDate = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                    updateMapCoordinates(username, location.latitude, location.longitude, currentDate)
                 } else {
                     _currentPosition.value = "Location not available"
                 }
@@ -75,8 +68,8 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun updateMapCoordinates(username: String, latitude: Double, longitude: Double) {
-        RetrofitInstance.api.updateMapCoordinates(username, latitude, longitude)
+    fun updateMapCoordinates(username: String, latitude: Double, longitude: Double, currentDate: String) {
+        RetrofitInstance.api.updateMapCoordinates(username, latitude, longitude, currentDate)
             .enqueue(object : Callback<ApiResponse> {
                 override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
                     if (response.isSuccessful && response.body()?.success == true) {

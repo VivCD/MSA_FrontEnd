@@ -56,10 +56,11 @@ interface ApiService {
     @GET("/map/getData")
     fun getMapData(@Query("username") username: String): Call<List<String>>
 
-    @POST("/map/updateCoordinates")
+    @PUT("/location/updateLocation")
     fun updateMapCoordinates(
         @Query("username") username: String,
         @Query("latitude") latitude: Double,
-        @Query("longitude") longitude: Double
+        @Query("longitude") longitude: Double,
+        @Query("creationDate") creationDate: String
     ): Call<ApiResponse>
 }
