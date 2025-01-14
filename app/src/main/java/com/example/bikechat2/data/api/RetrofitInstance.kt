@@ -4,18 +4,28 @@ package com.example.bikechat2.data.api
 import com.example.bikechat2.data.model.FriendRequest
 import com.example.bikechat2.data.model.LoginRequest
 import com.example.bikechat2.data.model.User
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.http.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
-    public const val BASE_URL = "https://42c1-2a02-2f0a-e212-6d00-78d8-eb3e-7db8-ed09.ngrok-free.app"
+    public const val BASE_URL = "https://2eef-2a02-2f0b-5309-9100-3807-e23-d18d-196.ngrok-free.app"
+
+    private val gson: Gson = GsonBuilder()
+        .setLenient()  // ✅ Allow lenient JSON parsing
+        .create()
+
+    private val client = OkHttpClient.Builder().build()
 
     val api: ApiService by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create(gson))  // ✅ Use lenient Gson
             .build()
             .create(ApiService::class.java)
     }

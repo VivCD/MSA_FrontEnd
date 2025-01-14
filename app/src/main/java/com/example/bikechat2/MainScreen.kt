@@ -14,7 +14,7 @@ import com.example.bikechat2.ui.screen.FriendsScreen
 import com.example.bikechat2.ui.screen.MapScreen
 import com.example.bikechat2.ui.screen.ProfileScreen
 import com.example.bikechat2.ui.screen.GroupSelectScreen
-
+import com.example.bikechat2.ui.screen.CallScreen
 @Composable
 fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
     val navController = rememberNavController()
@@ -55,11 +55,24 @@ fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.v
             )
         }
 
+        composable(
+            route = "callScreen/{callLogID}",
+            arguments = listOf(navArgument("callLogID") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val callLogID = backStackEntry.arguments?.getString("callLogID") ?: ""
+            CallScreen(
+                callLogID = callLogID,
+                username = currentUser,
+                onEndCall = { navController.popBackStack("home", inclusive = false) }
+            )
+        }
+
         composable("groupSelect") {
             GroupSelectScreen(
                 username = currentUser,
-                onStartCallClick = { groupName ->
-                    // Handle starting a call here
+                navController = navController,  // ✅ Pass the navController here
+                onStartCallClick = { callLogID ->
+                    navController.navigate("callScreen/$callLogID")
                 },
                 onFriendsClick = { navController.navigate("friends/$currentUser") },
                 onMapClick = { navController.navigate("map") },
@@ -92,5 +105,8 @@ fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.v
         composable("profile") {
             ProfileScreen()
         }
+
+
     }
 }
+

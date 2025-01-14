@@ -9,12 +9,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.bikechat2.ui.components.BottomNavigationBar
 import com.example.bikechat2.data.model.GroupViewModel
 
 @Composable
 fun GroupSelectScreen(
     username: String,
+    navController: NavController,
     onStartCallClick: (String) -> Unit,
     onFriendsClick: () -> Unit,
     onMapClick: () -> Unit,
@@ -57,7 +59,11 @@ fun GroupSelectScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(text = group, style = MaterialTheme.typography.bodyLarge)
-                        Button(onClick = { onStartCallClick(group) }) {
+                        Button(onClick = {
+                            viewModel.initiateCall(group) { callLogID ->
+                                navController.navigate("callScreen/$callLogID")  // ✅ Direct navigation
+                            }
+                        }) {
                             Text("Start Call")
                         }
                     }

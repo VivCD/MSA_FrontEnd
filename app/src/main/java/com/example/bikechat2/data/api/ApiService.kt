@@ -66,4 +66,9 @@ interface ApiService {
 
     @GET("/location/getNearbyLocations")
     fun getNearbyLocations(@Query("username") username: String): Call<List<UserLocation>>
+
+    @POST("/groups/initiateCall")
+    fun initiateCall(@Query("groupID") groupID: String): Call<ApiResponse>
+
+
 }
