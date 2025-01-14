@@ -83,4 +83,29 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
                 }
             })
     }
+
+    fun fetchNearbyLocations(username: String){
+        RetrofitInstance.api.getNearbyLocations(username)
+            .enqueue(object : Callback<List<UserLocation>>{
+                override fun onResponse(
+                    call: Call<List<UserLocation>?>,
+                    response: Response<List<UserLocation>?>
+                ) {
+                    if(response.isSuccessful){
+                        response.body()?.let { locations ->
+                            _mapData.value = locations.map { location ->
+                                "Lat: ${location.latitude}, Long: ${location.longitude}"
+                            }
+                        }
+                    } else {
+                        Log.d("MapViewModel", "Failed to fetch locations: ${response.message()}")
+                    }
+                }
+
+                override fun onFailure(call: Call<List<UserLocation>?>, t: Throwable) {
+                    Log.d("MapViewModel", "API call failed with error: ${t.message}")
+                    t.printStackTrace()
+                }
+            })
+    }
 }
