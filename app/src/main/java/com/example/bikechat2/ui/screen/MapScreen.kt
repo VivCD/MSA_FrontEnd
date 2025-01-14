@@ -46,7 +46,7 @@ fun MapScreen(
     }
 
     var selectedLocation by remember { mutableStateOf<UserLocation?>(null) }
-
+    var showDialog by remember { mutableStateOf(false) } // State to control dialog visibility
 
     Scaffold(
         bottomBar = {
@@ -68,7 +68,7 @@ fun MapScreen(
             Spacer(modifier = Modifier.height(16.dp))
             Text("Current Position: $currentPosition", style = MaterialTheme.typography.titleMedium)
 
-
+            // Google Map view
             GoogleMap(
                 cameraPositionState = cameraPositionState,
                 modifier = Modifier.fillMaxSize(),
@@ -85,42 +85,32 @@ fun MapScreen(
                     )
                 }
 
+                // Iterate through the map data (now a list of UserLocation)
                 mapData.forEach { locationData ->
                     val markerLatLng = LatLng(
-                        locationData.latitude ?: 0.0,
-                        locationData.longitude ?: 0.0
+                        locationData.latitude?: 0.0,
+                        locationData.longitude?: 0.0)
+                    Marker(
+                        state = MarkerState(position = markerLatLng),
+                        title = "Nearby Location",
+                        onClick = {
+                            selectedLocation = locationData
+                            showDialog = true // Show the dialog when a location is selected
+                            true
+                        }
                     )
-                    markerLatLng?.let { pos ->
-                        Marker(
-                            state = MarkerState(position = pos),
-                            title = "Nearby Location",
-                            onClick = {
-                                selectedLocation = locationData
-                                true
-                            }
-                        )
-                    }
                 }
             }
 
-            selectedLocation?.let {
-                InfoWindowDialog(
-                    username = it.username ?: "unknown user",
-                    onButton1Click = { /* Handle Button 1 click */ },
-                    onButton2Click = { /* Handle Button 2 click */ }
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-            LazyColumn {
-                items(mapData.size) { index ->
-                    val data = mapData[index]
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(text = data.toString(), style = MaterialTheme.typography.bodyLarge)
-                    }
+            // Show InfoWindowDialog if a location is selected
+            if (showDialog) {
+                selectedLocation?.let {
+                    InfoWindowDialog(
+                        username = it.username ?: "Unknown User",
+                        onButton1Click = { /* Handle Button 1 click */ },
+                        onButton2Click = { /* Handle Button 2 click */ },
+                        onCloseClick = { showDialog = false } // Close the dialog when the button is clicked
+                    )
                 }
             }
         }
@@ -146,10 +136,11 @@ fun parseLocation(position: String): LatLng? {
     }
 }
 
+
 @Composable
-fun InfoWindowDialog(username: String, onButton1Click: () -> Unit, onButton2Click: () -> Unit) {
+fun InfoWindowDialog(username: String, onButton1Click: () -> Unit, onButton2Click: () -> Unit, onCloseClick: () -> Unit) {
     AlertDialog(
-        onDismissRequest = { },
+        onDismissRequest = { onCloseClick() },
         title = { Text("User: $username") },
         text = {
             Column {
@@ -163,7 +154,7 @@ fun InfoWindowDialog(username: String, onButton1Click: () -> Unit, onButton2Clic
             }
         },
         confirmButton = {
-            TextButton(onClick = { }) {
+            TextButton(onClick = onCloseClick) { // Handle close button click
                 Text("Close")
             }
         }
