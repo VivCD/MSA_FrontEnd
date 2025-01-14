@@ -1,5 +1,7 @@
 package com.example.bikechat2.ui.screen
 
+import android.R.attr.icon
+import android.R.id.icon
 import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -17,6 +19,7 @@ import com.example.bikechat2.data.model.FriendsViewModel
 import com.example.bikechat2.data.model.MapViewModel
 import com.example.bikechat2.data.model.UserLocation
 import com.example.bikechat2.ui.components.BottomNavigationBar
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -55,7 +58,7 @@ fun MapScreen(
     LaunchedEffect(latLng) {
         Log.d("MapScreen", "New LatLng: $latLng")
         latLng?.let {
-            cameraPositionState.position = CameraPosition.fromLatLngZoom(it, 15f)
+            cameraPositionState.position = CameraPosition.fromLatLngZoom(it, 20f)
         }
     }
 
@@ -112,6 +115,7 @@ fun MapScreen(
                         )
                         Marker(
                             state = MarkerState(position = markerLatLng),
+                            icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE),
                             title = "Nearby Location",
                             onClick = {
                                 selectedLocation = locationData
