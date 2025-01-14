@@ -18,6 +18,9 @@ import retrofit2.Response
 import androidx.compose.runtime.State
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -29,6 +32,8 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
     val currentPosition: State<String> get() = _currentPosition
 
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(application)
+
+    private val coroutineScope = CoroutineScope(Dispatchers.IO)
 
 
 
@@ -56,7 +61,7 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
                     _currentPosition.value = userLocation
 
                     val currentDate = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-                    updateMapCoordinates(username, location.latitude, location.longitude, currentDate)
+                    updateMapCoordinates(username, location.latitude, location.longitude)
                 } else {
                     _currentPosition.value = "Location not available"
                 }
@@ -68,8 +73,8 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun updateMapCoordinates(username: String, latitude: Double, longitude: Double, currentDate: String) {
-        RetrofitInstance.api.updateMapCoordinates(username, latitude, longitude, currentDate)
+    fun updateMapCoordinates(username: String, latitude: Double, longitude: Double, ) {
+        RetrofitInstance.api.updateMapCoordinates(username, latitude, longitude)
             .enqueue(object : Callback<ApiResponse> {
                 override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
                     if (response.isSuccessful && response.body()?.success == true) {
@@ -105,5 +110,13 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
                     t.printStackTrace()
                 }
             })
+    }
+
+
+
+
+    override fun onCleared() {
+        super.onCleared()
+        coroutineScope.cancel()
     }
 }
