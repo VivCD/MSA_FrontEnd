@@ -61,8 +61,7 @@ interface ApiService {
     fun updateMapCoordinates(
         @Query("username") username: String,
         @Query("latitude") latitude: Double,
-        @Query("longitude") longitude: Double,
-        @Query("creationDate") creationDate: String
+        @Query("longitude") longitude: Double
     ): Call<ApiResponse>
 
     @GET("/location/getNearbyLocations")
