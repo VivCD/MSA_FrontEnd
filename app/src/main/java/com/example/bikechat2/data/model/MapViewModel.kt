@@ -22,8 +22,8 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class MapViewModel(application: Application) : AndroidViewModel(application) {
-    private val _mapData = mutableStateOf<List<String>>(emptyList())
-    val mapData: State<List<String>> get() = _mapData
+    private val _mapData = mutableStateOf<List<UserLocation>>(emptyList())
+    val mapData: State<List<UserLocation>> get() = _mapData
 
     private val _currentPosition = mutableStateOf<String>("Unknown")
     val currentPosition: State<String> get() = _currentPosition
@@ -91,11 +91,9 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
                     call: Call<List<UserLocation>?>,
                     response: Response<List<UserLocation>?>
                 ) {
-                    if(response.isSuccessful){
+                    if (response.isSuccessful) {
                         response.body()?.let { locations ->
-                            _mapData.value = locations.map { location ->
-                                "Lat: ${location.latitude}, Long: ${location.longitude}"
-                            }
+                            _mapData.value = locations // Set the data to list of UserLocation objects
                         }
                     } else {
                         Log.d("MapViewModel", "Failed to fetch locations: ${response.message()}")

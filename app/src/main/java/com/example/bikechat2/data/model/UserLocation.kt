@@ -4,6 +4,6 @@ import com.google.type.DateTime
 
 data class UserLocation (
     val username: String? = null,
-    val latitude: Float? = null,
-    val longitude: Float? = null
+    val latitude: Double? = null,
+    val longitude: Double? = null
 )

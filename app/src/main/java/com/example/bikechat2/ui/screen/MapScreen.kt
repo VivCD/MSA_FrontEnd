@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bikechat2.data.model.MapViewModel
+import com.example.bikechat2.data.model.UserLocation
 import com.example.bikechat2.ui.components.BottomNavigationBar
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -41,8 +42,11 @@ fun MapScreen(
     val latLng = parseLocation(currentPosition)
 
     latLng?.let {
-        cameraPositionState.position = CameraPosition.fromLatLngZoom(it, 30f)
+        cameraPositionState.position = CameraPosition.fromLatLngZoom(it, 25f)
     }
+
+    var selectedLocation by remember { mutableStateOf<UserLocation?>(null) }
+
 
     Scaffold(
         bottomBar = {
@@ -64,26 +68,47 @@ fun MapScreen(
             Spacer(modifier = Modifier.height(16.dp))
             Text("Current Position: $currentPosition", style = MaterialTheme.typography.titleMedium)
 
-            // Google Map view
+
             GoogleMap(
                 cameraPositionState = cameraPositionState,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                onMapClick = {
+                    // Dismiss any selected location info window when the map is clicked
+                    selectedLocation = null
+                }
             ) {
+                // Add the current location marker
                 latLng?.let {
                     Marker(
                         state = MarkerState(position = it),
                         title = "Current Location"
                     )
                 }
+
                 mapData.forEach { locationData ->
-                    val markerLatLng = parseLocation(locationData)
+                    val markerLatLng = LatLng(
+                        locationData.latitude ?: 0.0,
+                        locationData.longitude ?: 0.0
+                    )
                     markerLatLng?.let { pos ->
                         Marker(
                             state = MarkerState(position = pos),
-                            title = "Nearby Location"
+                            title = "Nearby Location",
+                            onClick = {
+                                selectedLocation = locationData
+                                true
+                            }
                         )
                     }
                 }
+            }
+
+            selectedLocation?.let {
+                InfoWindowDialog(
+                    username = it.username ?: "unknown user",
+                    onButton1Click = { /* Handle Button 1 click */ },
+                    onButton2Click = { /* Handle Button 2 click */ }
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -94,7 +119,7 @@ fun MapScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = data, style = MaterialTheme.typography.bodyLarge)
+                        Text(text = data.toString(), style = MaterialTheme.typography.bodyLarge)
                     }
                 }
             }
@@ -120,3 +145,28 @@ fun parseLocation(position: String): LatLng? {
         null
     }
 }
+
+@Composable
+fun InfoWindowDialog(username: String, onButton1Click: () -> Unit, onButton2Click: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = { },
+        title = { Text("User: $username") },
+        text = {
+            Column {
+                Button(onClick = onButton1Click) {
+                    Text("Button 1")
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(onClick = onButton2Click) {
+                    Text("Button 2")
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = { }) {
+                Text("Close")
+            }
+        }
+    )
+}
+
