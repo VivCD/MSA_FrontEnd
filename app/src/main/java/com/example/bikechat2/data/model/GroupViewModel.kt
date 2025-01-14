@@ -16,7 +16,7 @@ class GroupViewModel : ViewModel() {
     val groupList = _groupList.asStateFlow()
 
     private val apiService: ApiService = Retrofit.Builder()
-        .baseUrl(" https://bcb1-2a02-2f0a-e212-6d00-a404-ede1-696e-cd9c.ngrok-free.app") // Adjust this base URL to your backend
+        .baseUrl("https://42c1-2a02-2f0a-e212-6d00-78d8-eb3e-7db8-ed09.ngrok-free.app") // Adjust this base URL to your backend
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(ApiService::class.java)

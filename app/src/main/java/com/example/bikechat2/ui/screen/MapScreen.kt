@@ -31,6 +31,7 @@ fun MapScreen(
 
     LaunchedEffect(Unit) {
         viewModel.fetchUserLocation(context, username)
+        viewModel.fetchNearbyLocations(username)
     }
 
     val cameraPositionState = rememberCameraPositionState {
@@ -40,7 +41,7 @@ fun MapScreen(
     val latLng = parseLocation(currentPosition)
 
     latLng?.let {
-        cameraPositionState.position = CameraPosition.fromLatLngZoom(it, 15f)
+        cameraPositionState.position = CameraPosition.fromLatLngZoom(it, 30f)
     }
 
     Scaffold(
@@ -73,6 +74,15 @@ fun MapScreen(
                         state = MarkerState(position = it),
                         title = "Current Location"
                     )
+                }
+                mapData.forEach { locationData ->
+                    val markerLatLng = parseLocation(locationData)
+                    markerLatLng?.let { pos ->
+                        Marker(
+                            state = MarkerState(position = pos),
+                            title = "Nearby Location"
+                        )
+                    }
                 }
             }
 

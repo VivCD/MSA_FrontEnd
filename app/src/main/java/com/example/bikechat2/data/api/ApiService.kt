@@ -3,6 +3,7 @@ package com.example.bikechat2.data.api
 import com.example.bikechat2.data.model.FriendRequest
 import com.example.bikechat2.data.model.LoginRequest
 import com.example.bikechat2.data.model.User
+import com.example.bikechat2.data.model.UserLocation
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -63,4 +64,7 @@ interface ApiService {
         @Query("longitude") longitude: Double,
         @Query("creationDate") creationDate: String
     ): Call<ApiResponse>
+
+    @GET("/location/getNearbyLocations")
+    fun getNearbyLocations(@Query("username") username: String): Call<List<UserLocation>>
 }
