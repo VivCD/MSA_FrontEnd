@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.bikechat2.data.model.FriendsViewModel
 import com.example.bikechat2.data.model.MapViewModel
 import com.example.bikechat2.data.model.UserLocation
 import com.example.bikechat2.ui.components.BottomNavigationBar
@@ -26,6 +27,7 @@ fun MapScreen(
     onProfileClick: () -> Unit
 ) {
     val viewModel: MapViewModel = viewModel()
+    val friendsViewModel: FriendsViewModel = viewModel()
     val mapData by viewModel.mapData
     val currentPosition by viewModel.currentPosition
     val context = LocalContext.current
@@ -107,7 +109,9 @@ fun MapScreen(
                 selectedLocation?.let {
                     InfoWindowDialog(
                         username = it.username ?: "Unknown User",
-                        onButton1Click = { /* Handle Button 1 click */ },
+                        onButton1Click = {
+                            friendsViewModel.sendFriendRequest(username, it.username ?: "unknown user")
+                        },
                         onButton2Click = { /* Handle Button 2 click */ },
                         onCloseClick = { showDialog = false } // Close the dialog when the button is clicked
                     )
@@ -145,11 +149,11 @@ fun InfoWindowDialog(username: String, onButton1Click: () -> Unit, onButton2Clic
         text = {
             Column {
                 Button(onClick = onButton1Click) {
-                    Text("Button 1")
+                    Text("Add to friends")
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Button(onClick = onButton2Click) {
-                    Text("Button 2")
+                    Text("Call")
                 }
             }
         },
