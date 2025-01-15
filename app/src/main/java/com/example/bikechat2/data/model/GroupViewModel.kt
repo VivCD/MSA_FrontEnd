@@ -7,19 +7,24 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bikechat2.data.api.ApiResponse
 import com.example.bikechat2.data.api.ApiService
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import com.example.bikechat2.data.api.RetrofitInstance
 import kotlinx.coroutines.launch
 import retrofit2.Call
+import retrofit2.Response
+import retrofit2.Callback
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class GroupViewModel : ViewModel() {
 
-    private val _groupList = MutableLiveData<List<Group>>()
-    val groupList: LiveData<List<Group>> get() = _groupList
-    private val _groupNames = MutableLiveData<List<String>>(emptyList())
-    val groupNames: LiveData<List<String>> get() = _groupNames
+//    private val _groupList = MutableLiveData<List<Group>>()
+//    val groupList: LiveData<List<Group>> get() = _groupList
+//    private val _groupNames = MutableLiveData<List<String>>(emptyList())
+//    val groupNames: LiveData<List<String>> get() = _groupNames
+    var groupList = mutableStateOf<List<Group>>(emptyList())
+        private set
+    var groupNames = mutableStateOf<List<String>>(emptyList())
+        private set
 
     private val apiService: ApiService = Retrofit.Builder()
         .baseUrl("https://a5e0-2a02-2f0a-e212-6d00-b0a1-f0df-1e2-4e75.ngrok-free.app") // Adjust this base URL to your backend
@@ -37,25 +42,19 @@ class GroupViewModel : ViewModel() {
                         override fun onResponse(
                             call: Call<List<Map<String, String>>>,
                             response: retrofit2.Response<List<Map<String, String>>>
-
                         ) {
                             if (response.isSuccessful && response.body() != null) {
-
-
-
                                 val groups = response.body()!!
-
                                 println("Fetched Groups: $groups")
-
                                 val userGroups = groups.map {
                                     Group(
                                         groupName = it["groupName"] ?: "Unknown Group",
                                         groupId = it["groupId"] ?: "Unknown ID"
                                     )
                                 }
-                                _groupList.value = userGroups
+                                groupList.value = userGroups
                                 val groupNamesList = userGroups.map { it.groupName }
-                                _groupNames.value = groupNamesList as List<String>?
+                                groupNames.value = (groupNamesList as List<String>?)!!
                             } else {
                                 println(
                                     "Error fetching user groups: ${
@@ -64,7 +63,6 @@ class GroupViewModel : ViewModel() {
                                 )
                             }
                         }
-
                         override fun onFailure(call: Call<List<Map<String, String>>>, t: Throwable) {
 
                             println("Failed to fetch groups: ${t.localizedMessage}")
@@ -94,13 +92,40 @@ class GroupViewModel : ViewModel() {
         })
     }
 
+    fun joinGroup(username: String, groupID: String) {
+        RetrofitInstance.api.joinGroup(groupID, username).enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    println("Group joined successfully: ${response.body()}")
+                    fetchGroups(username)
+                } else {
+                    println("Error joining group: ${response.errorBody()?.string()}")
+                }
 
+            }
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                println("Failed to join group: ${t.localizedMessage}")
+            }
+        })
+        fetchGroups(username)
+    }
 
+    fun leaveGroup(username: String, groupID: String){
+        RetrofitInstance.api.leaveGroup(groupID, username).enqueue(object : Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if (response.isSuccessful) {
+                    println("Group left successfully: ${response.body()}")
+                    fetchGroups(username)
+                } else {
+                    println("Error leaving group: ${response.errorBody()?.string()}")
+                }
 
+            }
 
-
-
-
-
+            override fun onFailure(call: Call<String?>, t: Throwable) {
+                println("Failed to leave group: ${t.localizedMessage}")
+            }
+        })
+        fetchGroups(username)
+    }
 }
-//wow2

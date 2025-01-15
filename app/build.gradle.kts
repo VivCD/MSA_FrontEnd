@@ -61,6 +61,7 @@ dependencies {
     implementation ("androidx.compose.material:material:1.5.0")
     implementation ("androidx.compose.ui:ui-tooling:1.5.0")
     implementation ( "androidx.navigation:navigation-compose:2.7.2")
+    implementation ("androidx.compose.runtime:runtime-livedata:1.7.6")
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.google.maps)

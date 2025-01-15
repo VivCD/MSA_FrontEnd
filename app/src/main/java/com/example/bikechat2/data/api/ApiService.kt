@@ -70,5 +70,16 @@ interface ApiService {
     @POST("/groups/initiateCall")
     fun initiateCall(@Query("groupID") groupID: String): Call<ApiResponse>
 
+    @POST("/groups/joinGroup")
+    fun joinGroup(
+        @Query("groupID") groupID: String,
+        @Query("username") username: String
+    ): Call<String>
+
+    @POST("/groups/leaveGroup")
+    fun leaveGroup(
+        @Query("groupID") groupID: String,
+        @Query("username") username: String
+    ): Call<String>
 
 }
