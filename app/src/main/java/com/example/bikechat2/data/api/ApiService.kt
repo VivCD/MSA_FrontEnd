@@ -82,4 +82,10 @@ interface ApiService {
         @Query("username") username: String
     ): Call<String>
 
+    @POST("/groups/createGroup")
+    fun createGroup(
+        @Query("username") username: String,
+        @Query("groupName") groupName: String
+    ): Call<String>
+
 }

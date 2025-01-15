@@ -17,17 +17,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class GroupViewModel : ViewModel() {
 
-//    private val _groupList = MutableLiveData<List<Group>>()
-//    val groupList: LiveData<List<Group>> get() = _groupList
-//    private val _groupNames = MutableLiveData<List<String>>(emptyList())
-//    val groupNames: LiveData<List<String>> get() = _groupNames
     var groupList = mutableStateOf<List<Group>>(emptyList())
         private set
     var groupNames = mutableStateOf<List<String>>(emptyList())
         private set
 
     private val apiService: ApiService = Retrofit.Builder()
-        .baseUrl("https://a5e0-2a02-2f0a-e212-6d00-b0a1-f0df-1e2-4e75.ngrok-free.app") // Adjust this base URL to your backend
+        .baseUrl("https://b597-2a02-2f0a-e212-6d00-b0a1-f0df-1e2-4e75.ngrok-free.app") // Adjust this base URL to your backend
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(ApiService::class.java)
@@ -52,9 +48,10 @@ class GroupViewModel : ViewModel() {
                                         groupId = it["groupId"] ?: "Unknown ID"
                                     )
                                 }
-                                groupList.value = userGroups
+                                groupList.value = userGroups.toList()
                                 val groupNamesList = userGroups.map { it.groupName }
                                 groupNames.value = (groupNamesList as List<String>?)!!
+
                             } else {
                                 println(
                                     "Error fetching user groups: ${
@@ -124,6 +121,24 @@ class GroupViewModel : ViewModel() {
 
             override fun onFailure(call: Call<String?>, t: Throwable) {
                 println("Failed to leave group: ${t.localizedMessage}")
+            }
+        })
+        fetchGroups(username)
+    }
+
+    fun createGroup(username: String, groupName: String){
+        RetrofitInstance.api.createGroup(username, groupName).enqueue(object: Callback<String> {
+            override fun onResponse(call: Call<String?>, response: Response<String?>) {
+                if (response.isSuccessful) {
+                    println("Group created successfully: ${response.body()}")
+                    fetchGroups(username)
+                } else {
+                    println("Error creating group: ${response.errorBody()?.string()}")
+                }
+            }
+
+            override fun onFailure(call: Call<String?>, t: Throwable) {
+                println("Failed to create group: ${t.localizedMessage}")
             }
         })
         fetchGroups(username)

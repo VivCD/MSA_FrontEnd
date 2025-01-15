@@ -15,6 +15,7 @@ import com.example.bikechat2.ui.screen.MapScreen
 import com.example.bikechat2.ui.screen.ProfileScreen
 import com.example.bikechat2.ui.screen.GroupSelectScreen
 import com.example.bikechat2.ui.screen.CallScreen
+import com.example.bikechat2.ui.screen.CreateGroupScreen
 import com.example.bikechat2.ui.screen.ManageGroupsScreen
 
 @Composable
@@ -115,6 +116,19 @@ fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.v
         ) { backStackEntry ->
             val username = backStackEntry.arguments?.getString("username") ?: ""
             ManageGroupsScreen(
+                username = username,
+                onMapClick = { navController.navigate("map/$username") },
+                onProfileClick = { navController.navigate("profile") },
+                navController = navController
+            )
+        }
+
+        composable(
+            route = "createGroups/{username}",
+            arguments = listOf(navArgument("username") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val username = backStackEntry.arguments?.getString("username") ?: ""
+            CreateGroupScreen(
                 username = username,
                 onMapClick = { navController.navigate("map/$username") },
                 onProfileClick = { navController.navigate("profile") }
