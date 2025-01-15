@@ -52,7 +52,7 @@ interface ApiService {
     fun getGroups(@Query("groupName") groupName: String): Call<List<String>>
 
     @GET("/groups/getUserGroups")
-    fun getUserGroups(@Query("username") username: String): Call<List<String>>
+    fun getUserGroups(@Query("username") username: String): Call<List<Map<String, String>>>
 
     @GET("/map/getData")
     fun getMapData(@Query("username") username: String): Call<List<String>>

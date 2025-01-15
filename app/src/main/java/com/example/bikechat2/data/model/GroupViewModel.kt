@@ -1,5 +1,8 @@
 package com.example.bikechat2.data.model
 
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bikechat2.data.api.ApiResponse
@@ -13,11 +16,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class GroupViewModel : ViewModel() {
 
-    private val _groupList = MutableStateFlow<List<String>>(emptyList())
-    val groupList = _groupList.asStateFlow()
+    private val _groupList = MutableLiveData<List<Group>>()
+    val groupList: LiveData<List<Group>> get() = _groupList
+    private val _groupNames = MutableLiveData<List<String>>(emptyList())
+    val groupNames: LiveData<List<String>> get() = _groupNames
 
     private val apiService: ApiService = Retrofit.Builder()
-        .baseUrl("https://2eef-2a02-2f0b-5309-9100-3807-e23-d18d-196.ngrok-free.app") // Adjust this base URL to your backend
+        .baseUrl("https://a5e0-2a02-2f0a-e212-6d00-b0a1-f0df-1e2-4e75.ngrok-free.app") // Adjust this base URL to your backend
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(ApiService::class.java)
@@ -28,14 +33,29 @@ class GroupViewModel : ViewModel() {
                 println("Fetching groups for: $username")  // Debug
 
                 apiService.getUserGroups(username)
-                    .enqueue(object : retrofit2.Callback<List<String>> {
+                    .enqueue(object : retrofit2.Callback<List<Map<String, String>>> {
                         override fun onResponse(
-                            call: Call<List<String>>,
-                            response: retrofit2.Response<List<String>>
+                            call: Call<List<Map<String, String>>>,
+                            response: retrofit2.Response<List<Map<String, String>>>
+
                         ) {
                             if (response.isSuccessful && response.body() != null) {
-                                println("Fetched Groups: ${response.body()}")  // Debug
-                                _groupList.value = response.body()!!
+
+
+
+                                val groups = response.body()!!
+
+                                println("Fetched Groups: $groups")
+
+                                val userGroups = groups.map {
+                                    Group(
+                                        groupName = it["groupName"] ?: "Unknown Group",
+                                        groupId = it["groupId"] ?: "Unknown ID"
+                                    )
+                                }
+                                _groupList.value = userGroups
+                                val groupNamesList = userGroups.map { it.groupName }
+                                _groupNames.value = groupNamesList as List<String>?
                             } else {
                                 println(
                                     "Error fetching user groups: ${
@@ -45,7 +65,8 @@ class GroupViewModel : ViewModel() {
                             }
                         }
 
-                        override fun onFailure(call: Call<List<String>>, t: Throwable) {
+                        override fun onFailure(call: Call<List<Map<String, String>>>, t: Throwable) {
+
                             println("Failed to fetch groups: ${t.localizedMessage}")
                         }
                     })
@@ -72,6 +93,9 @@ class GroupViewModel : ViewModel() {
             }
         })
     }
+
+
+
 
 
 

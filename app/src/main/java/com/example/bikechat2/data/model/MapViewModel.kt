@@ -2,6 +2,7 @@ package com.example.bikechat2.data.model
 
 
 
+import android.R
 import android.app.Activity
 import android.app.Application
 import android.content.Context
@@ -73,7 +74,9 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun updateMapCoordinates(username: String, latitude: Double, longitude: Double, ) {
+    fun updateMapCoordinates(username: String, latitude: Double, longitude: Double ) {
+        val userLocation = "Lat: ${latitude}, Long: ${longitude}"
+        _currentPosition.value = userLocation
         RetrofitInstance.api.updateMapCoordinates(username, latitude, longitude)
             .enqueue(object : Callback<ApiResponse> {
                 override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
@@ -87,6 +90,17 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
                     t.printStackTrace()
                 }
             })
+    }
+
+    fun updateHardcodedCoordinates(count: Int, username: String) {
+        when (count) {
+            1 -> updateMapCoordinates(username, 45.7609891613873, 21.216900718790054)
+            2 -> updateMapCoordinates(username, 45.76149326939873, 21.214746504800743)
+            3 -> updateMapCoordinates(username, 45.76254817915786, 21.211936260867105)
+            5 -> updateMapCoordinates(username, 45.760409362137324, 21.209555515299698)
+            4 -> updateMapCoordinates(username, 45.763930640828335, 21.206807235278458)
+            else -> Log.d("MapViewModel", "No coordinates for count: $count")
+        }
     }
 
     fun fetchNearbyLocations(username: String){
@@ -111,6 +125,8 @@ class MapViewModel(application: Application) : AndroidViewModel(application) {
                 }
             })
     }
+
+
 
 
 

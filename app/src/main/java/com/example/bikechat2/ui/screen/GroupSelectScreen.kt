@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.bikechat2.data.model.Group
 import com.example.bikechat2.ui.components.BottomNavigationBar
 import com.example.bikechat2.data.model.GroupViewModel
 
@@ -23,12 +24,18 @@ fun GroupSelectScreen(
     onProfileClick: () -> Unit
 ) {
     val viewModel: GroupViewModel = viewModel()
-    val groupList by viewModel.groupList.collectAsState()
-
+    val groupNames = remember { mutableStateOf<List<String>>(emptyList()) }
 
     LaunchedEffect(Unit) {
         println("Fetching groups for username: $username")  // Debug
         viewModel.fetchGroups(username)
+
+
+    }
+    LaunchedEffect(viewModel) {
+        viewModel.groupNames.observeForever { groups ->
+            groupNames.value = groups
+        }
     }
 
 
@@ -52,7 +59,7 @@ fun GroupSelectScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             LazyColumn {
-                items(groupList) { group ->  // ✅ Changed from groupList.size to groupList
+                items(groupNames.value) { group ->  // ✅ Changed from groupList.size to groupList
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
