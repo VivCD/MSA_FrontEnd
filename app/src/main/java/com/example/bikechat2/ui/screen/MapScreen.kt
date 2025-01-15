@@ -48,9 +48,19 @@ fun MapScreen(
             delay(5000)
         }
     }
+//    LaunchedEffect(Unit) {
+//        var count = 1
+//        while (true) {
+//            viewModel.fetchNearbyLocations(username)
+//            viewModel.updateHardcodedCoordinates(count, username)
+//            count++
+//            if (count > 4) count = 1
+//            delay(5000)
+//        }
+//    }
 
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(0.0, 0.0), 10f)
+        position = CameraPosition.fromLatLngZoom(LatLng(0.0, 0.0), 16f)
     }
 
     val latLng = parseLocation(currentPosition)
@@ -58,7 +68,7 @@ fun MapScreen(
     LaunchedEffect(latLng) {
         Log.d("MapScreen", "New LatLng: $latLng")
         latLng?.let {
-            cameraPositionState.position = CameraPosition.fromLatLngZoom(it, 20f)
+            cameraPositionState.position = CameraPosition.fromLatLngZoom(it, 16f)
         }
     }
 
@@ -150,7 +160,7 @@ fun MapScreen(
                     onClick = {
                         // Recenter the map to the user's current location
                         latLng?.let {
-                            cameraPositionState.position = CameraPosition.fromLatLngZoom(it, 20f)
+                            cameraPositionState.position = CameraPosition.fromLatLngZoom(it, 18f)
                         }
                     },
                     modifier = Modifier

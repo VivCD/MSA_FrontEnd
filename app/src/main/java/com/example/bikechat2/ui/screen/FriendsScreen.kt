@@ -97,6 +97,12 @@ fun FriendsScreen(
                     Text("Send Request")
                 }
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = "Groups", style = MaterialTheme.typography.titleLarge)
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Text("Your Groups", style = MaterialTheme.typography.titleMedium)
         }
     }
 }
