@@ -68,6 +68,7 @@ fun CreateGroupScreen(
                     if (groupName.value.isNotBlank()) {
                         groupsViewModel.createGroup(username, groupName.value)
                         groupName.value = ""
+
                     } else {
                         println("Group name cannot be empty!")
                     }

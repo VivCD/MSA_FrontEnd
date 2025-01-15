@@ -32,7 +32,7 @@ fun FriendsScreen(
     val friendRequests by viewModel.friendRequests
     val newFriendUsername = remember { mutableStateOf("") }
 
-   val groupList by groupsViewModel.groupList
+    val groupList by groupsViewModel.groupList
     val groupNames by groupsViewModel.groupNames
 
     LaunchedEffect(Unit) {
