@@ -13,7 +13,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
-    public const val BASE_URL = "https://a5e0-2a02-2f0a-e212-6d00-b0a1-f0df-1e2-4e75.ngrok-free.app"
+    public const val BASE_URL = "https://b597-2a02-2f0a-e212-6d00-b0a1-f0df-1e2-4e75.ngrok-free.app"
 
     private val gson: Gson = GsonBuilder()
         .setLenient()  // ✅ Allow lenient JSON parsing

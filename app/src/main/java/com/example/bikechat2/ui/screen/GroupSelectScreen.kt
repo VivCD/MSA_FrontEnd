@@ -24,20 +24,12 @@ fun GroupSelectScreen(
     onProfileClick: () -> Unit
 ) {
     val viewModel: GroupViewModel = viewModel()
-//    val groupNames = remember { mutableStateOf<List<String>>(emptyList()) }
-
-//    val groupList by viewModel.groupList
     val groupNames by viewModel.groupNames
 
     LaunchedEffect(Unit) {
         println("Fetching groups for username: $username")  // Debug
         viewModel.fetchGroups(username)
     }
-//    LaunchedEffect(viewModel) {
-//        viewModel.groupNames.observeForever { groups ->
-//            groupNames.value = groups
-//        }
-//    }
 
 
     Scaffold(

@@ -1,5 +1,6 @@
 package com.example.bikechat2.data.api
 
+import com.example.bikechat2.data.model.Discoverability
 import com.example.bikechat2.data.model.FriendRequest
 import com.example.bikechat2.data.model.LoginRequest
 import com.example.bikechat2.data.model.User
@@ -81,5 +82,41 @@ interface ApiService {
         @Query("groupID") groupID: String,
         @Query("username") username: String
     ): Call<String>
+
+    @POST("/groups/createGroup")
+    fun createGroup(
+        @Query("username") username: String,
+        @Query("groupName") groupName: String
+    ): Call<String>
+
+    @GET("/users/getUserByUsername")
+    fun getUserByUsername(
+        @Query("username") username: String
+    ): Call<User>
+
+    @PUT("users/updateLocationDiscoverability")
+    fun updateLocationDiscoverability(
+        @Query("username") username: String,
+        @Query("discoverability") discoverability: Discoverability
+    ): Call<String>
+
+    @PUT("users/updateBio")
+    fun updateBio(
+        @Query("username") username: String,
+        @Query("bio") bio: String,
+    ): Call<String>
+
+    @PUT("users/updateEmail")
+    fun updateEmail(
+        @Query("username") username: String,
+        @Query("email") email: String,
+    ): Call<String>
+
+    @PUT("users/updateProfilePicture")
+    fun updateProfilePicture(
+        @Query("username") username: String,
+        @Query("profilePictureUrl") profilePictureUrl: String,
+    ): Call<String>
+
 
 }

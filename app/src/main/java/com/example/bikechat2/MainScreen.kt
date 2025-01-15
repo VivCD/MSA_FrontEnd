@@ -15,6 +15,7 @@ import com.example.bikechat2.ui.screen.MapScreen
 import com.example.bikechat2.ui.screen.ProfileScreen
 import com.example.bikechat2.ui.screen.GroupSelectScreen
 import com.example.bikechat2.ui.screen.CallScreen
+import com.example.bikechat2.ui.screen.CreateGroupScreen
 import com.example.bikechat2.ui.screen.ManageGroupsScreen
 
 @Composable
@@ -53,7 +54,7 @@ fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.v
                     }
                 },
                 onMapClick = { navController.navigate("map/$currentUser") },
-                onProfileClick = { navController.navigate("profile") }
+                onProfileClick = { navController.navigate("profile/$currentUser") }
             )
         }
 
@@ -77,8 +78,8 @@ fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.v
                     navController.navigate("callScreen/$callLogID")
                 },
                 onFriendsClick = { navController.navigate("friends/$currentUser") },
-                onMapClick = { navController.navigate("map") },
-                onProfileClick = { navController.navigate("profile") }
+                onMapClick = { navController.navigate("map/$currentUser") },
+                onProfileClick = { navController.navigate("profile/$currentUser") }
             )
         }
 
@@ -88,8 +89,8 @@ fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.v
         ) { backStackEntry ->
             val username = backStackEntry.arguments?.getString("username") ?: ""
             FriendsScreen(
-                onMapClick = { navController.navigate("map") },
-                onProfileClick = { navController.navigate("profile") },
+                onMapClick = { navController.navigate("map/$username") },
+                onProfileClick = { navController.navigate("profile/$username") },
                 username = username,
                 navController = navController
             )
@@ -102,11 +103,24 @@ fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.v
             MapScreen(
                 username = username,
                 onFriendsClick = { navController.navigate("friends/$username") },
-                onProfileClick = { navController.navigate("profile") }
+                onProfileClick = { navController.navigate("profile/$username") }
             )
         }
-        composable("profile") {
-            ProfileScreen()
+//        composable("profile") {
+//            ProfileScreen()
+//        }
+
+        composable(
+            route = "profile/{username}",
+            arguments = listOf(navArgument("username") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val username = backStackEntry.arguments?.getString("username") ?: ""
+            ProfileScreen(
+                username = username,
+                onMapClick = { navController.navigate("map/$username") },
+                onProfileClick = { navController.navigate("profile/$username") },
+                navController = navController
+            )
         }
 
         composable(
@@ -117,7 +131,20 @@ fun MainScreen(viewModel: MainViewModel = androidx.lifecycle.viewmodel.compose.v
             ManageGroupsScreen(
                 username = username,
                 onMapClick = { navController.navigate("map/$username") },
-                onProfileClick = { navController.navigate("profile") }
+                onProfileClick = { navController.navigate("profile/$username") },
+                navController = navController
+            )
+        }
+
+        composable(
+            route = "createGroups/{username}",
+            arguments = listOf(navArgument("username") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val username = backStackEntry.arguments?.getString("username") ?: ""
+            CreateGroupScreen(
+                username = username,
+                onMapClick = { navController.navigate("map/$username") },
+                onProfileClick = { navController.navigate("profile/$username") }
             )
         }
 

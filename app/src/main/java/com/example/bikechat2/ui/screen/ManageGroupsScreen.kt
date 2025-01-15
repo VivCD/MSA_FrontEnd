@@ -30,19 +30,22 @@ import com.example.bikechat2.ui.components.BottomNavigationBar
 import androidx.compose.runtime.getValue
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.material.Divider
 import androidx.compose.runtime.getValue
+import androidx.navigation.NavController
 
 
 @Composable
 fun ManageGroupsScreen(
     username: String,
     onMapClick: () -> Unit,
-    onProfileClick: () -> Unit
+    onProfileClick: () -> Unit,
+    navController: NavController
 ) {
     val groupViewModel: GroupViewModel = viewModel()
 
     val groupList by groupViewModel.groupList
-
     val groupIdToJoin = remember { mutableStateOf("") }
 
     LaunchedEffect(username) {
@@ -68,36 +71,61 @@ fun ManageGroupsScreen(
             Text(text = "Groups", style = MaterialTheme.typography.titleLarge)
 
             Spacer(modifier = Modifier.height(16.dp))
-            Text("Your Groups", style = MaterialTheme.typography.titleMedium)
+            Text("Your Groups:", style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(16.dp))
 
             LazyColumn {
                 items(groupList) { group ->
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp), // Add some padding between rows
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Group name in white color
-                        Text(
-                            text = group.groupName.toString(),
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = Color.White
-                        )
+                        Column {
+                            SelectionContainer { // Make the text selectable
+                                Text(
+                                    text = group.groupName.toString(),
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = Color.White
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(4.dp))
+                            SelectionContainer {
+                                Text(
+                                    text = "ID: ${group.groupId}",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = Color.Gray
+                                )
+                            }
+                        }
                         Button(onClick = {
                             groupViewModel.leaveGroup(username, group.groupId.toString())
                         }) {
                             Text("Leave Group")
                         }
                     }
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Divider(
+                        color = Color.White.copy(alpha = 0.5f),
+                        thickness = 1.dp
+                    )
                 }
             }
 
-            // Spacer between list and text field
+            Spacer(modifier = Modifier.height(48.dp))
+            Text("Create a group:", style = MaterialTheme.typography.titleLarge)
             Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = {
+                navController.navigate("createGroups/$username")
+            },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Create group")
+            }
+            Spacer(modifier = Modifier.height(48.dp))
+            Text("Join a group:", style = MaterialTheme.typography.titleLarge)
 
-            // TextField for entering groupId to join
             OutlinedTextField(
                 value = groupIdToJoin.value,
                 onValueChange = { groupIdToJoin.value = it },
@@ -107,7 +135,8 @@ fun ManageGroupsScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Join Group button
+            Spacer(modifier = Modifier.height(8.dp))
+
             Button(
                 onClick = {
                     if (groupIdToJoin.value.isNotBlank()) {

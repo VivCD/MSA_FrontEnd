@@ -56,7 +56,11 @@ fun SignInScreen(onSignInComplete: (String) -> Unit) {
                         email = email,
                         password = password,
                         bio = bio,
-                        profilePictureUrl = profilePictureUrl
+                        profilePictureUrl = profilePictureUrl,
+                        friends = null,
+                        pendingRequests = null,
+                        locationDiscoverability = null
+
                     )
                     RetrofitInstance.api.registerUser(user).enqueue(object : Callback<ApiResponse> {
                         override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
