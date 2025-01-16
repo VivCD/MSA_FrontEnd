@@ -2,6 +2,7 @@ package com.example.bikechat2.ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -78,7 +80,6 @@ fun ProfileScreen(
                 .padding(bottom = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Ribbon with username
             Box(
                 modifier = Modifier
                     .background(Color.Gray)
@@ -95,23 +96,44 @@ fun ProfileScreen(
                         .align(Alignment.CenterStart)
                         .padding(top = 30.dp)
                 )
-
-                Box(
-                    modifier = Modifier
-                        .size(100.dp)
-                        .clip(CircleShape)
-                        .clickable {
-                            editingField.value = "url"
-                            newValue.value = user.profilePictureUrl ?: ""
-                            showDialog.value = true
-                        }
-                        .align(Alignment.CenterEnd)
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.align(Alignment.CenterEnd)
                 ) {
-                    Image(
-                        painter = rememberImagePainter(user.profilePictureUrl),
-                        contentDescription = "Profile Picture",
-                        modifier = Modifier.fillMaxSize()
-                    )
+                    Box(
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(CircleShape)
+                            .clickable {
+                                editingField.value = "url"
+                                newValue.value = user.profilePictureUrl ?: ""
+                                showDialog.value = true
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (user.profilePictureUrl.isNullOrEmpty()) {
+                            // Placeholder circle
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(Color.LightGray),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "Change Picture",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = Color.DarkGray
+                                )
+                            }
+                        } else {
+                            Image(
+                                painter = rememberImagePainter(user.profilePictureUrl),
+                                contentDescription = "Profile Picture",
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+                    }
                 }
             }
         }
